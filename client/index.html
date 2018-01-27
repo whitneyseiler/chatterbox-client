@@ -7,7 +7,7 @@
 
     <!-- dependencies -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/jquery/dist/underscore.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
     <script>
       // YOU DO NOT NEED TO EDIT THIS CODE
       if (!/(&|\?)username=/.test(window.location.search)) {
@@ -26,12 +26,75 @@
   <body>
     <div id="main">
       <h1>chatterbox</h1>
+
+      <nav>
+        <ul id ="topnav">
+          <li><a class="nav-link" href="index.html">Home</a></li>
+          <li>
+          <button onclick="dropdown()" id='roomSelect'>Select Room</button>
+          <div id="dropDown">
+        <!--     <a href="#">Main</a> -->
+          </div>
+          <li style="float:right"><a class="nav-link">Friends</a></li>
+          <li style="float:right"><a class="nav-link" href="#newroom">Create a Room</a></li>
+        </ul>
+      </nav>
+
       <!-- Your HTML goes here! -->
-      <h3>Post New Tweet</h3><br>
-      <input type="text" placeholder="Your tweet here..."></input><button>Post</button><br>
-      <h3>Create a Room</h3><br>
-      <input type="text" placeholder="Enter Room Name"><button>Create</button>
+      <!-- <h3>Post New Message</h3> -->
+
+      <div id='chatNav'>
+        
+<!--         <div>
+          <button onclick="dropdown()" id='roomSelect'>Select Room</button>
+          <div id="dropDown">
+            <a href="#">Main</a>
+          </div>
+        </div> -->
+          
+        <br>
+        <input type="text"
+          id="post"
+          class="tweet-form" 
+          placeholder="Your message here..."/>
+        <button id="postButton">Post</button>
+        <br>
+        
+      </div>
+
     </div>
-    <div id="chats"></div>
+
+
+    <div id="chats"/>
+
   </body>
 </html>
+
+<script>
+  
+$(document).ready(function() {
+
+  // $('.home').on('click', function() {
+  //   renderRoom()
+  //   showTweets();
+  // });
+  
+  // function dropdown() {
+  //   document.getElementById("dropdown")
+  // }
+  $('#username').on('click', function() {
+    friendsList.push();
+  }),
+  
+  $('#postButton').on('click', function() {
+    var post = {
+      username: 'username',
+      text: $('#post').val(),
+      roomname: '',
+    };
+    app.send(post);
+  });
+
+});
+app.init();
+</script>

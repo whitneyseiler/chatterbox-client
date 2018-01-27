@@ -3,6 +3,41 @@ body {
     text-align: center;
     padding: 0 25px;
     font-family: arial, sans-serif;
+    background-color: #e6ecf0;
+    margin: 0;
+    height: 100%;
+}
+
+h1 {
+    text-align: center;
+}
+
+#topnav {
+background-color: white;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: grey;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+li a:hover {
+    color: dodgerblue;
 }
 
 #main, #chats {
@@ -13,6 +48,10 @@ body {
     padding: 50px 60px;
     border: solid #ddd;
     border-width: 0 1px 1px 1px;
+}
+
+#main.tweet-form, h3 {
+    text-align: center;
 }
 
 #main h1 {
@@ -57,6 +96,22 @@ form input[type=text] {
     width: 70%;
     font-size: 12px;
     padding: 5px;
+}
+
+.message {
+    background: White;
+    color: Gray;
+    font-family: Helvetica Neue;
+    font-size: 14px;
+    margin: 0px 10px 10px 10px;
+    padding: 5px;
+    line-height: 18px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+}
+
+#roomSelect{
 }
 
 .chat {
