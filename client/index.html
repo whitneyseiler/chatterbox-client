@@ -25,7 +25,7 @@
   </head>
   <body>
     <div id="main">
-      <h1>chatterbox</h1>
+      <h1 id="title">chatterbox</h1>
 
       <nav>
         <ul id ="topnav">
@@ -74,24 +74,22 @@
   
 $(document).ready(function() {
 
-  // $('.home').on('click', function() {
-  //   renderRoom()
-  //   showTweets();
-  // });
+  $('.home').on('click', function() {
+    app.clearMessages();
+    app.fetch();
+  });
   
-  // function dropdown() {
-  //   document.getElementById("dropdown")
-  // }
   $('#username').on('click', function() {
-    friendsList.push();
+    // friendsList.push();
   }),
   
   $('#postButton').on('click', function() {
     var post = {
-      username: 'username',
+      username: 'Andy',
       text: $('#post').val(),
       roomname: '',
     };
+    app.handleSubmit();
     app.send(post);
   });
 

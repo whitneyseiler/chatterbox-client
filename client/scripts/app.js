@@ -69,14 +69,17 @@ var app = {
         .append($('<a/>', {
           class: 'username',
           text: message.username,
-          // class: @TODO
-        }))
+        })
+          .click(function() {
+            alert('hello');
+          })
+        )
         .append($('<p/>', {
           text: message.createdAt,
         })) 
       .append($('<p/>', {
         text: message.text,
-      })))
+      })));
 
     $('#chats').append(message);
   },
@@ -95,8 +98,12 @@ var app = {
     $('#chats').empty();
   },
 
+  handleSubmit: function() {
+    calledOnce: true;
+  },
+  
   handleUsernameClick: function(userName) {
-    
+    return false;
   }
 
 
