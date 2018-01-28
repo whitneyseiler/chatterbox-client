@@ -8,13 +8,16 @@ var app = {
 
   //NOTE@WHITNEY: added server string. Simplifies code and fixes fetch test
   server: 'http://parse.SFM6.hackreactor.com/chatterbox/classes/messages',
-  
+  user: window.location.search.substring(10),
+  room: undefined,
+  friends: [],
+  roomList: [],
+
   init: function() {
     app.clearMessages();
     app.fetch();
+    app.getRooms();
   },
-
-  //NOTE@WHITNEY: adding OICE Documentation
   
   /** 
    * Sends a message object to Chatterbox
@@ -27,9 +30,12 @@ var app = {
       data: JSON.stringify(message),
       contentType: 'application/json',
       success: function (data) {
-        console.log('chatterbox: Message sent', data);
         app.clearMessages();
-        app.fetch();
+        if (app.room) {
+          app.fetch(app.room);
+        } else {
+          app.fetch();
+        }
       },
       error: function (data) {
         console.error('chatterbox: Failed to send message', data);
@@ -40,7 +46,7 @@ var app = {
   /** 
    * Fetches messages from Chatterbox
    */
-  fetch: function() {
+  fetch: function(roomName) {
     $.ajax({
       url: this.server,
       type: 'GET',
@@ -48,9 +54,41 @@ var app = {
       contentType: 'application/json',
       success: function (data) {
         var messages = data.results;
+        
+        if (roomName) {
+          messages = messages.filter(function(message) {
+            return message.roomname === roomName;
+          });
+        }
         for (var i = 0; i < messages.length; i++) {
           app.renderMessage(messages[i]);
         }
+      },
+    });
+  },
+  
+  /**
+   * Checks for new rooms in server to populate roomlist
+   */
+  getRooms: function() {
+    $.ajax({
+      url: this.server,
+      type: 'GET',
+      data: {'order': '-createdAt'},
+      contentType: 'application/json',
+      success: function (data) {
+        var messages = data.results;
+        
+        app.roomList = [];
+        for (var i = 0; i < messages.length; i++) {
+          if (!!messages[i].roomname) {
+            app.roomList.push(messages[i].roomname);            
+          }
+        }
+        
+        app.roomList = _.uniq(app.roomList);
+        
+        app.populateRoomList();
       },
     });
   },
@@ -60,7 +98,7 @@ var app = {
    * param: message Message to append to the chatroom feed
    */
   renderMessage: function(message) {  
-    var message = $('<div/>', { // POST
+    var messageDiv = $('<div/>', { // POST
       class: 'message',
     })
       .append($('<div/>', { // Post Header
@@ -70,27 +108,55 @@ var app = {
           class: 'username',
           text: message.username,
         })
-          .click(function() {
-            alert('hello');
-          })
-        )
+          .on('click', function() {
+            app.handleUsernameClick(message.username);
+          }))
+          
         .append($('<p/>', {
           text: message.createdAt,
         })) 
-      .append($('<p/>', {
-        text: message.text,
-      })));
+        .append($('<p/>', {
+          text: message.text,
+        })));
 
-    $('#chats').append(message);
+    $('#chats').append(messageDiv);
   },
 
-  //**NOTE ON THIS: would love to have a new room REPLACE current feed, instead of append beneath it in the DOM
-  //basically individual custom feeds
+  /**
+   * Creates a new user-generated chat filter and adds to roomlist
+   * Param: roomname
+   */
   renderRoom: function(roomName) {
-    var newRoom = $('<div id="newRoom">' + roomName + '</div>');
-    $('#roomSelect').append(newRoom);
+    //gives a form, and adds new room to roomList
+    app.roomList.push(roomName);
+    app.populateRoomList();
+    app.enterRoom(roomName);
   },
-
+  
+  /**
+   * Appends rooms list to the rooms list dropdown
+   */
+  populateRoomList: function() {
+    for (var i = 0; i < app.roomList.length; i++) {
+      $('.dropdown').append(
+        $('<option/>', {
+          text: app.roomList[i],
+        })
+      );
+    }
+    
+  },
+  
+  /**
+   * Replaces current feed with room specific feed
+   * Param: roomName
+   */
+  enterRoom: function(roomName) {
+    app.room = roomName;
+    app.clearMessages();
+    app.fetch(roomName);
+  },
+  
   /**
    * Clears all messages
    */
@@ -98,13 +164,16 @@ var app = {
     $('#chats').empty();
   },
 
-  handleSubmit: function() {
-    calledOnce: true;
+  handleSubmit: function(post) {
+    app.send(post);
   },
   
   handleUsernameClick: function(userName) {
-    return false;
-  }
+    if (!app.friends.includes(userName)) {
+      app.friends.push(userName);
+      alert(userName + ' has been added');
+    }
+  },
 
 
 };

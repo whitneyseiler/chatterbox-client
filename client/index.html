@@ -28,42 +28,41 @@
       <h1 id="title">chatterbox</h1>
 
       <nav>
-        <ul id ="topnav">
-          <li><a class="nav-link" href="index.html">Home</a></li>
-          <li>
-          <button onclick="dropdown()" id='roomSelect'>Select Room</button>
-          <div id="dropDown">
-        <!--     <a href="#">Main</a> -->
-          </div>
-          <li style="float:right"><a class="nav-link">Friends</a></li>
-          <li style="float:right"><a class="nav-link" href="#newroom">Create a Room</a></li>
-        </ul>
+        <a id="home" class="nav-link">Home</a>
+        
+          <select class="dropdown">
+            <option>Select a Room</option>
+            <option id='createaroom'>
+              Create a Room
+            </option>
+          </select>
+        
+        <a id=createroom class="nav-link" >Create a Room</a>
+        
+        <a id="friends" class="nav-link">Friends</a>
+        
       </nav>
 
       <!-- Your HTML goes here! -->
-      <!-- <h3>Post New Message</h3> -->
-
-      <div id='chatNav'>
-        
-<!--         <div>
-          <button onclick="dropdown()" id='roomSelect'>Select Room</button>
-          <div id="dropDown">
-            <a href="#">Main</a>
-          </div>
-        </div> -->
-          
+      <div id='chatnav'>
         <br>
-        <input type="text"
+        <textarea type="text"
           id="post"
           class="tweet-form" 
-          placeholder="Your message here..."/>
+          placeholder="Your message here...">
+        </textarea>
+
         <button id="postButton">Post</button>
-        <br>
         
       </div>
 
     </div>
-
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>My Friends</h3>
+      </div>
+    </div>
 
     <div id="chats"/>
 
@@ -74,25 +73,73 @@
   
 $(document).ready(function() {
 
-  $('.home').on('click', function() {
+  $('#home').on('click', function() {
+    app.room = undefined;
     app.clearMessages();
     app.fetch();
   });
   
-  $('#username').on('click', function() {
-    // friendsList.push();
+  $('.roomselectbutton').on('click', function() {
+    $('.roomlist').toggle();
+  })
+  
+  $('.username').on('click', function() {
+    console.log('yo');
+    friendsList.push();
+    app.handleUsernameClick(userName);
   }),
   
   $('#postButton').on('click', function() {
     var post = {
-      username: 'Andy',
+      username: app.user,
       text: $('#post').val(),
-      roomname: '',
+      roomname: app.room,
     };
-    app.handleSubmit();
-    app.send(post);
+    app.handleSubmit(post);
+  });
+  
+  $('#friends').on('click', function() {
+    var friendsList = $('<div/>');
+    for (var i = 0; i < app.friends.length; i++) {
+      friendsList.append($('<p/>', {
+        text: app.friends[i],
+      }));
+    }
+    $('.modal-content').append(friendsList);
+    console.log(friendsList);
+    $('.modal').css({'display': 'block'});
+  });
+  
+  $('.close').on('click', function() {
+    $('.modal').css({'display': 'none'});
+  });
+  
+  $('#createroom').on('click', function() {
+    var roomName = prompt("Please enter room name");
+    app.renderRoom(roomName);
+  }); 
+  
+  $('.dropdown').change(function() {
+    app.room = $(this).val();
+    app.enterRoom(app.room);
   });
 
 });
 app.init();
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
