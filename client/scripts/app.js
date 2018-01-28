@@ -137,6 +137,8 @@ var app = {
    * Appends rooms list to the rooms list dropdown
    */
   populateRoomList: function() {
+    $('.dropdown option').remove();
+    
     for (var i = 0; i < app.roomList.length; i++) {
       $('.dropdown').append(
         $('<option/>', {
@@ -144,6 +146,8 @@ var app = {
         })
       );
     }
+    
+    $('.dropdown')[0].selectedIndex = app.roomList.length - 1;
     
   },
   
